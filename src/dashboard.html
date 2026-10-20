@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Comparador responsive · Emulator MCP</title>
+<link rel="icon" href="data:,">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10151e;color:#edf2fa;font:15px system-ui,sans-serif}header{padding:24px 28px;border-bottom:1px solid #30394b;display:flex;gap:20px;justify-content:space-between;align-items:center;flex-wrap:wrap}h1{font-size:22px;margin:0 0 8px}p{margin:0;color:#aab8ce;overflow-wrap:anywhere}label{display:flex;align-items:center;gap:10px}main{display:flex;gap:24px;padding:28px;align-items:flex-start;overflow-x:auto;min-height:70vh}article{flex-shrink:0;background:#1c2432;border:1px solid #354159;border-radius:20px;padding:14px}h2{font-size:15px;margin:0 0 8px}.meta{font-size:12px;color:#aab8ce;margin:0 0 12px;max-width:300px}img{display:block;background:white;width:100%;border-radius:8px}footer{padding:12px 28px;color:#aab8ce;font-size:13px}a{color:#8ed3ff}button{background:#28364c;border:1px solid #526480;border-radius:8px;color:white;padding:9px 12px;cursor:pointer}#status{padding:16px 28px;color:#aab8ce}input{accent-color:#66ceb3}
+</style>
+<header><div><h1>Una página. Varias pantallas.</h1><p id="url">Conectando con la sesión…</p></div><label>Escala <input id="scale" type="range" min="15" max="100" value="40"><span id="scaleValue">40%</span></label><button id="pause">Pausar actualización</button></header>
+<div id="status" role="status">Preparando capturas</div><main id="screens"></main>
+<footer>Vista de las pantallas del agente · Se actualiza cada 3 segundos · Las acciones se ejecutan desde el MCP. Cada tamaño conserva su propia sesión web.</footer>
+<script>
+const cards=new Map();let latest=[],paused=false;
+const base=new URL('./',location.href);
+const scale=document.querySelector('#scale');
+function resize(){document.querySelector('#scaleValue').textContent=scale.value+'%';for(const s of latest){const card=cards.get(s.screenId);if(card&&s.viewport)card.style.width=(s.viewport.width*Number(scale.value)/100+30)+'px';}}
+scale.addEventListener('input',resize);
+document.querySelector('#pause').onclick=()=>{paused=!paused;document.querySelector('#pause').textContent=paused?'Reanudar actualización':'Pausar actualización';};
+async function refresh(){
+ try{
+  if(paused)return;
+  const response=await fetch(new URL('state',base));if(!response.ok)throw new Error('La sesión no está disponible');const data=await response.json();
+  latest=data.screens;document.querySelector('#url').textContent=data.url;
+  for(const s of latest){
+   let card=cards.get(s.screenId);
+   if(!card){card=document.createElement('article');const title=document.createElement('h2');title.textContent=s.device;const meta=document.createElement('p');meta.className='meta';const img=document.createElement('img');img.alt='Captura de '+s.device;card.append(title,meta,img);document.querySelector('#screens').append(card);cards.set(s.screenId,card);}
+   card.querySelector('.meta').textContent=s.error||`${s.viewport.width} × ${s.viewport.height} · ${s.title} · ${s.events.length} eventos`;
+   if(!s.error)card.querySelector('img').src=new URL('screen/'+s.screenId+'?t='+Date.now(),base);
+  }
+  resize();document.querySelector('#status').textContent='Actualizado '+new Date(data.updatedAt).toLocaleTimeString();
+ }catch(err){document.querySelector('#status').textContent=err.message+'. Si cerraste el MCP, abre una nueva sesión.';}
+ finally{setTimeout(refresh,3000);}
+}
+refresh();
+</script>
+</html>

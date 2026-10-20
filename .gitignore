@@ -1,0 +1,15 @@
+node_modules/
+captures/
+.env
+.env.*
+!.env.example
+*.log
+vendor-raw/
+logs/
+.playwright-cli/
+output/
+demo/out/
+*.tgz
+*.bak
+.emulator-mcp/
+.DS_Store

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReservaPy fixture responsive</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, sans-serif; color: #111; }
+  header { padding: 12px 16px; background: #F7F4EF; border-bottom: 1px solid #E5DFD3; }
+  .fila-tabla { overflow-x: hidden; }
+  /* desborde horizontal deliberado en pantallas chicas */
+  table.ancha { width: 620px; border-collapse: collapse; }
+  table.ancha th, table.ancha td { padding: 8px 12px; border: 1px solid #ccc; white-space: nowrap; }
+  .tarjeta-fija { width: 520px; padding: 12px; background: #EFE9DE; }
+  .recorte { width: 140px; height: 24px; overflow: hidden; }
+  button.minusculo { width: 28px; height: 24px; padding: 0; }
+  img.ancho { width: 900px; height: 120px; display: block; }
+  .caja { padding: 16px; }
+  .solo-desktop { display: none; }
+  .solo-mobile { display: block; }
+  @media (min-width: 400px) { .caja { background: #FFFDF8; } }
+  @media (min-width: 768px) { .solo-desktop { display: block; } .solo-mobile { display: none; } }
+  @media (max-width: 380px) { header { font-size: 13px; } }
+</style>
+</head>
+<body>
+  <header id="topbar">ReservaPy — pantalla de prueba</header>
+
+  <section class="caja" id="tabla-section">
+    <h1>Turnos por hora</h1>
+    <div class="fila-tabla">
+      <table class="ancha">
+        <thead><tr><th>Hora</th><th>Peluqueria</th><th>Estetica</th><th>Barberia</th><th>Nail art</th><th>Fisioterapia</th></tr></thead>
+        <tbody>
+          <tr><td>08:00</td><td>2</td><td>1</td><td>0</td><td>3</td><td>1</td></tr>
+          <tr><td>09:00</td><td>4</td><td>2</td><td>1</td><td>0</td><td>2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="tarjeta-fija" id="tarjeta-ancho">Tarjeta de promos con ancho fijo de 520px (rompe el layout en movil).</div>
+
+  <section class="caja">
+    <h2>Texto que se corta</h2>
+    <p class="recorte" id="texto-recortado">Confirmamos tu reserva para el viernes 24 de octubre a las 18:30 en la sede de Villa Morra.</p>
+    <button class="minusculo" id="btn-minusculo" aria-label="Guardar">OK</button>
+  </section>
+
+  <section class="caja">
+    <h2>Imagen grande</h2>
+    <img class="ancho" alt="mapa" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='120'%3E%3Crect width='900' height='120' fill='%23C9D6C1'/%3E%3Ctext x='20' y='70' font-size='40' fill='%23333'%3EMapa 900px%3C/text%3E%3C/svg%3E">
+    <p class="solo-desktop">Vista de escritorio (>768px)</p>
+    <p class="solo-mobile" id="marca-mobile">Vista movil</p>
+  </section>
+
+  <section class="caja" id="form">
+    <h2>Reservar</h2>
+    <a href="#confirmada" id="link-reservar">Reservar turno</a>
+    <label for="nombre">Nombre</label>
+    <input id="nombre" name="nombre" placeholder="Tu nombre">
+    <button id="confirmar" onclick="confirmar()">Confirmar</button>
+    <div id="confirmada" hidden>Turno confirmado</div>
+  </section>
+
+  <script>
+    function confirmar() {
+      const input = document.getElementById('nombre');
+      const destino = document.getElementById('confirmada');
+      destino.textContent = 'Turno confirmado para ' + input.value;
+      destino.hidden = false;
+      document.getElementById('link-reservar').textContent = 'Turno tomado';
+    }
+  </script>
+</body>
+</html>

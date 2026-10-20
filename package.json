@@ -1,0 +1,38 @@
+{
+  "name": "emulator-mcp",
+  "version": "0.2.0",
+  "description": "Servidor MCP que emula teléfonos, tablets y otras pantallas abriendo el navegador local, para que cualquier agente capture y audite layouts responsive",
+  "main": "src/index.cjs",
+  "bin": {
+    "emulator-mcp": "bin/cli.cjs"
+  },
+  "scripts": {
+    "start": "node src/index.cjs",
+    "test": "node test/install.cjs && node test/e2e.cjs && node test/sessions.cjs",
+    "test:install": "node test/install.cjs",
+    "test:package": "npm pack && node test/package.cjs",
+    "test:sessions": "node test/sessions.cjs",
+    "demo": "node demo/session.cjs",
+    "smoke": "node test/smoke.cjs"
+  },
+  "keywords": [
+    "mcp",
+    "responsive",
+    "emulator",
+    "playwright",
+    "device-testing"
+  ],
+  "license": "MIT",
+  "author": "damipineda",
+  "repository": { "type": "git", "url": "https://github.com/damipineda/emulator-mcp.git" },
+  "homepage": "https://github.com/damipineda/emulator-mcp#readme",
+  "bugs": { "url": "https://github.com/damipineda/emulator-mcp/issues" },
+  "engines": { "node": ">=20" },
+  "files": ["bin/", "src/", "demo/session.cjs", "test/fixture-responsive.html", "LICENSE", "NOTICE.md"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "playwright": "^1.64.1",
+    "zod": "^4.6.7",
+    "jsonc-parser": "^3.3.1"
+  }
+}
