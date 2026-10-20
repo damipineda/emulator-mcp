@@ -14,8 +14,6 @@ Necesitás **Node.js 20 o superior con npm/npx** y **Chrome o Microsoft Edge**. 
 
 El comando corto descarga el paquete desde el registro npm. No necesitás clonar el repositorio ni instalar Git. Ejecutá los instaladores desde la carpeta de la aplicación que quieras revisar.
 
-> Publicación npm pendiente: los comandos cortos de esta sección estarán disponibles cuando se publique `emulator-mcp`. La versión GitHub v0.2.0 sigue disponible mientras tanto.
-
 ### Conectar directamente como servidor MCP
 
 Para Claude Code:
@@ -235,7 +233,7 @@ Inspirado en [Mobile-Simulator](https://github.com/talah221/Mobile-Simulator). S
 
 Formatos de integración consultados: [OpenCode](https://opencode.ai/docs/mcp-servers/), [Cursor](https://cursor.com/docs/mcp), [Claude Code](https://code.claude.com/docs/en/mcp), [Codex](https://developers.openai.com/codex/mcp), [VS Code](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
-Licencia MIT. Código fuente en GitHub; publicación en npm preparada y pendiente de autenticación del mantenedor.
+Licencia MIT. [Código fuente en GitHub](https://github.com/damipineda/emulator-mcp) y [paquete público en npm](https://www.npmjs.com/package/emulator-mcp).
 
 ## Publicación del mantenedor
 
@@ -249,7 +247,7 @@ Después de publicar, verificar `npm view emulator-mcp version` y ejecutar `node
 
 ### Versión GitHub disponible
 
-La versión anterior puede ejecutarse sin esperar la publicación en npm:
+La versión anterior distribuida directamente desde GitHub sigue disponible:
 
 ```bash
 npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp
