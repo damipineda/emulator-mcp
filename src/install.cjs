@@ -1,12 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { parse, modify, applyEdits } = require('jsonc-parser');
-const { version } = require('../package.json');
+const { name } = require('../package.json');
 
-const PACKAGE_URL = `https://github.com/damipineda/emulator-mcp/archive/refs/tags/v${version}.tar.gz`;
+const PACKAGE_SPEC = name;
 
 function configuration(agent, cwd) {
-  const run = ['-y', `--package=${PACKAGE_URL}`, 'emulator-mcp'];
+  const run = ['-y', PACKAGE_SPEC];
   const stdio = { type: 'stdio', command: 'npx', args: run };
   switch (agent) {
     case 'opencode': {
@@ -53,4 +53,4 @@ function install(agent, { cwd = process.cwd(), dryRun = false } = {}) {
   return { ...config, changed: true };
 }
 
-module.exports = { install, configuration, PACKAGE_URL };
+module.exports = { install, configuration, PACKAGE_SPEC };

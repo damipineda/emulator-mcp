@@ -1,6 +1,6 @@
 {
   "name": "emulator-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Servidor MCP que emula teléfonos, tablets y otras pantallas abriendo el navegador local, para que cualquier agente capture y audite layouts responsive",
   "main": "src/index.cjs",
   "bin": {
@@ -13,7 +13,8 @@
     "test:package": "npm pack && node test/package.cjs",
     "test:sessions": "node test/sessions.cjs",
     "demo": "node demo/session.cjs",
-    "smoke": "node test/smoke.cjs"
+    "smoke": "node test/smoke.cjs",
+    "prepublishOnly": "npm run smoke && npm run test:install"
   },
   "keywords": [
     "mcp",
@@ -24,10 +25,11 @@
   ],
   "license": "MIT",
   "author": "damipineda",
-  "repository": { "type": "git", "url": "https://github.com/damipineda/emulator-mcp.git" },
+  "repository": { "type": "git", "url": "git+https://github.com/damipineda/emulator-mcp.git" },
   "homepage": "https://github.com/damipineda/emulator-mcp#readme",
   "bugs": { "url": "https://github.com/damipineda/emulator-mcp/issues" },
   "engines": { "node": ">=20" },
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" },
   "files": ["bin/", "src/", "demo/session.cjs", "test/fixture-responsive.html", "LICENSE", "NOTICE.md"],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.1",

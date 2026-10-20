@@ -5,7 +5,8 @@ const { StdioClientTransport } = require('@modelcontextprotocol/sdk/client/stdio
 
 (async () => {
   const client = new Client({ name: 'distribution-check', version: '1' });
-  const pkg = process.argv[2] || path.resolve(__dirname, '../emulator-mcp-0.2.0.tgz');
+  const { name, version } = require('../package.json');
+  const pkg = process.argv[2] || path.resolve(__dirname, `../${name}-${version}.tgz`);
   const transport = new StdioClientTransport({ command: 'npx', args: ['-y', `--package=${pkg}`, 'emulator-mcp'], stderr: 'pipe' });
   transport.stderr.on('data', data => process.stderr.write(data));
   try {

@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { parse } = require('jsonc-parser');
-const { install, PACKAGE_URL } = require('../src/install.cjs');
+const { install, PACKAGE_SPEC } = require('../src/install.cjs');
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'emulator-install-'));
 let count = 0;
 function check(label, condition) { assert.ok(condition, label); count++; console.log('ok ' + label); }
@@ -13,7 +13,8 @@ for (const agent of ['opencode', 'cursor', 'claude-code', 'vscode']) {
   const installed = install(agent, { cwd });
   const data = parse(fs.readFileSync(installed.file, 'utf8'));
   const entry = data[installed.key]['emulator-mcp'];
-  check(`${agent}: comando apunta a version publica`, JSON.stringify(entry).includes(PACKAGE_URL));
+  const commandArgs = agent === 'opencode' ? entry.command.slice(1) : entry.args;
+  check(`${agent}: usa nombre corto del registro npm`, JSON.stringify(commandArgs) === JSON.stringify(['-y', PACKAGE_SPEC]));
   const before = fs.readFileSync(installed.file, 'utf8');
   check(`${agent}: segunda instalacion no modifica`, !install(agent, { cwd }).changed && fs.readFileSync(installed.file, 'utf8') === before);
 }

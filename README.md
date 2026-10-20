@@ -12,12 +12,47 @@ MCP para que los agentes de programación vean **la misma página en varios tama
 
 Necesitás **Node.js 20 o superior con npm/npx** y **Chrome o Microsoft Edge**. El MCP trabaja en la computadora donde lo ejecuta tu agente. Tu aplicación debe estar iniciada y ser accesible desde esa computadora.
 
-La versión pública se descarga directamente de GitHub. No necesitás clonar el repositorio ni instalar Git. Ejecutá los comandos de instalación desde la carpeta de la aplicación que quieras revisar.
+El comando corto descarga el paquete desde el registro npm. No necesitás clonar el repositorio ni instalar Git. Ejecutá los instaladores desde la carpeta de la aplicación que quieras revisar.
+
+> Publicación npm pendiente: los comandos cortos de esta sección estarán disponibles cuando se publique `emulator-mcp`. La versión GitHub v0.2.0 sigue disponible mientras tanto.
+
+### Conectar directamente como servidor MCP
+
+Para Claude Code:
+
+```bash
+claude mcp add emulator -- npx -y emulator-mcp
+```
+
+Para Codex:
+
+```bash
+codex mcp add emulator -- npx -y emulator-mcp
+```
+
+En OpenCode, fusioná este bloque con tu configuración:
+
+```json
+{
+  "mcp": {
+    "emulator": {
+      "type": "local",
+      "command": ["npx", "-y", "emulator-mcp"],
+      "enabled": true,
+      "timeout": 60000
+    }
+  }
+}
+```
+
+Los clientes con formato `mcpServers` pueden usar el bloque de [otros clientes](#otros-clientes-mcp-locales). Reiniciá el cliente y pedile al agente que abra tu URL con `open_responsive_session`.
+
+También podés usar los instaladores siguientes para escribir la configuración del proyecto automáticamente.
 
 ### OpenCode
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp install opencode
+npx -y emulator-mcp install opencode
 ```
 
 Agrega el servidor local a `opencode.json` o al `opencode.jsonc` existente. Después reiniciá OpenCode y comprobá la conexión con `opencode mcp list`.
@@ -25,7 +60,7 @@ Agrega el servidor local a `opencode.json` o al `opencode.jsonc` existente. Desp
 ### Cursor
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp install cursor
+npx -y emulator-mcp install cursor
 ```
 
 Escribe `.cursor/mcp.json` en el proyecto. Recargá Cursor y habilitá el servidor en sus ajustes MCP si te lo solicita.
@@ -33,13 +68,13 @@ Escribe `.cursor/mcp.json` en el proyecto. Recargá Cursor y habilitá el servid
 ### Claude Code
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp install claude-code
+npx -y emulator-mcp install claude-code
 ```
 
 Agrega el servidor a `.mcp.json` del proyecto. Abrí Claude Code para aprobar el servidor cuando lo solicite. También podés usar su comando nativo para instalación a nivel usuario:
 
 ```bash
-claude mcp add --scope user --transport stdio emulator-mcp -- npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp
+claude mcp add --scope user --transport stdio emulator-mcp -- npx -y emulator-mcp
 ```
 
 ### Codex
@@ -47,7 +82,7 @@ claude mcp add --scope user --transport stdio emulator-mcp -- npx -y --package=h
 Usá su comando nativo; requiere que la CLI de Codex esté instalada:
 
 ```bash
-codex mcp add emulator-mcp -- npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp
+codex mcp add emulator-mcp -- npx -y emulator-mcp
 ```
 
 Después reiniciá o reconectá Codex y verificá que aparezca el servidor.
@@ -55,7 +90,7 @@ Después reiniciá o reconectá Codex y verificá que aparezca el servidor.
 ### VS Code (configuración local compatible)
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp install vscode
+npx -y emulator-mcp install vscode
 ```
 
 Escribe el formato `servers` en `.vscode/mcp.json`. Su disponibilidad depende del agente/harness activo en VS Code; las configuraciones actuales de Copilot también permiten agregar un servidor mediante **MCP: Add Server → Command (stdio)** usando el comando de ejecución que figura abajo.
@@ -65,7 +100,7 @@ Escribe el formato `servers` en `.vscode/mcp.json`. Su disponibilidad depende de
 Comando del servidor: `npx`. Argumentos:
 
 ```json
-["-y", "--package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz", "emulator-mcp"]
+["-y", "emulator-mcp"]
 ```
 
 Si tu cliente usa `mcpServers`, fusioná este bloque con su configuración:
@@ -75,13 +110,13 @@ Si tu cliente usa `mcpServers`, fusioná este bloque con su configuración:
   "mcpServers": {
     "emulator-mcp": {
       "command": "npx",
-      "args": ["-y", "--package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz", "emulator-mcp"]
+      "args": ["-y", "emulator-mcp"]
     }
   }
 }
 ```
 
-En Windows, algunos clientes requieren `command: "cmd"` con argumentos `["/c", "npx", "-y", "--package=URL_DEL_PAQUETE", "emulator-mcp"]` para encontrar el ejecutable de npx. No cambies esto si tu cliente ya conecta correctamente.
+En Windows, algunos clientes requieren `command: "cmd"` con argumentos `["/c", "npx", "-y", "emulator-mcp"]` para encontrar el ejecutable de npx. No cambies esto si tu cliente ya conecta correctamente.
 
 El instalador conserva comentarios JSONC y otros servidores, respalda los archivos existentes y se niega a reemplazar una entrada `emulator-mcp` diferente. `install opencode --dry-run` muestra la configuración sin escribirla. La primera ejecución necesita conexión para descargar el paquete y sus dependencias; las siguientes aprovechan la caché de npm. La instalación registra el servidor; no comprueba por sí sola la conexión del agente ni acepta sus avisos de confianza.
 
@@ -105,13 +140,13 @@ El modelo debe admitir imágenes para interpretar las capturas. Con modelos de t
 ## Demo sin configurar un agente
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp demo
+npx -y emulator-mcp demo
 ```
 
 Imprime un enlace al panel con la página de prueba incluida. Para tu aplicación ya iniciada:
 
 ```bash
-npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp demo http://localhost:3000
+npx -y emulator-mcp demo http://localhost:3000
 ```
 
 Mantené ese proceso abierto y usá Ctrl+C para cerrar la demo.
@@ -200,4 +235,22 @@ Inspirado en [Mobile-Simulator](https://github.com/talah221/Mobile-Simulator). S
 
 Formatos de integración consultados: [OpenCode](https://opencode.ai/docs/mcp-servers/), [Cursor](https://cursor.com/docs/mcp), [Claude Code](https://code.claude.com/docs/en/mcp), [Codex](https://developers.openai.com/codex/mcp), [VS Code](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
-Licencia MIT. La distribución inicial se realiza por GitHub; no se ha publicado este nombre en el registro npm.
+Licencia MIT. Código fuente en GitHub; publicación en npm preparada y pendiente de autenticación del mantenedor.
+
+## Publicación del mantenedor
+
+```bash
+npm login
+npm run test:package
+npm publish --access public
+```
+
+Después de publicar, verificar `npm view emulator-mcp version` y ejecutar `node test/package.cjs emulator-mcp`. Los usuarios no necesitan una cuenta npm para descargar el paquete público.
+
+### Versión GitHub disponible
+
+La versión anterior puede ejecutarse sin esperar la publicación en npm:
+
+```bash
+npx -y --package=https://github.com/damipineda/emulator-mcp/archive/refs/tags/v0.2.0.tar.gz emulator-mcp
+```
